@@ -13,8 +13,8 @@ namespace Mars_Rover_UnitTest
         {
             //Arrange
             String commands = "FLFFFRFLB";
-            String start = "(4,2,EAST)";
-            String expected = "(6,4)NORTH";
+            String start = "(4, 2,EAST)";
+            String expected = "(6, 4)NORTH";
             RoverClass rover = new RoverClass(commands, start);
 
             //Act
@@ -28,8 +28,8 @@ namespace Mars_Rover_UnitTest
         {
             //Arrange
             String commands = "FLFFRFLB";
-            String start = "(4,2,EAST)";
-            String expected = "(6,3)NORTH";
+            String start = "(4, 2,EAST)";
+            String expected = "(6, 3)NORTH";
             RoverClass rover = new RoverClass(commands, start);
 
             //Act
@@ -45,8 +45,8 @@ namespace Mars_Rover_UnitTest
             List<KeyValuePair<int, int>> obs = new List<KeyValuePair<int, int>>();
 
             String commands = "FLFFFRFLB";
-            String start = "(4,2,EAST)";
-            String expected = "(5,5)EAST STOPPED";
+            String start = "(4, 2,EAST)";
+            String expected = "(5, 5)EAST STOPPED";
             RoverClass rover = new RoverClass(commands, start);
             obs.Add(new KeyValuePair<int, int>(1, 3));
             obs.Add(new KeyValuePair<int, int>(6, 5));

@@ -33,14 +33,11 @@ namespace Mars_Rover.Models
 
         public String MoveRover()
         {
-            String finalpos = "";
             Convert_String(start, ref x, ref y, ref dir);
 
             foreach (char command in commands) SetNewCoord(ref x,ref y,ref dir, command);
-
-            start = direction[dir];
-            finalpos= "(" + x + "," + y + ")" + start;
-            return finalpos;
+              
+            return CoordList[CoordList.Count - 1];
         }
 
         private void SetNewCoord(ref int x,ref int y,ref int dir,char comm)
@@ -123,24 +120,21 @@ namespace Mars_Rover.Models
                 }
             }
 
-            start = direction[dir];
-            CoordList.Add("(" + x + "," + y + ")" + start);
+            CoordList.Add("(" + x + ", " + y + ")" + direction[dir]);
         }
 
         public String Check_Obstacles(List<KeyValuePair<int, int>> obs)
         {
-            String finalpos = MoveRover();
+            MoveRover();
 
-            finalpos= Obs(x,y,dir,CoordList, obs);
-
-            return finalpos;
+            return Obs(x, y, dir, CoordList, obs);
         }
 
         private String Obs(int xx,int yy,int dirr, List<String> coordinate, List<KeyValuePair<int, int>> test)
         {
-            String finalpos = "";
             Boolean check = false;
             int counter = 0;
+
             foreach (String coord in coordinate)//string
             {
                 Convert_String(coord, ref xx, ref yy, ref dirr);
@@ -153,20 +147,14 @@ namespace Mars_Rover.Models
                     }
                 if (check) break;
             }
-            if (check)
-            {
-                finalpos = coordinate[counter-1]+ " " + "STOPPED";
-            }
-            else
-                finalpos = coordinate[coordinate.Count-1];
 
-            return finalpos;
+           return ( check ? (coordinate[counter - 1] + " " + "STOPPED") : (coordinate[coordinate.Count - 1]));
         }
 
         private void Convert_String(String s,ref int x,ref int y,ref int dir)
         {
             //reading the start point
-            Boolean flag = false;
+            flag = false;
             for (int i = 0; i < s.Length; i++)
             {
                 if (s[i] == '(')
@@ -174,10 +162,10 @@ namespace Mars_Rover.Models
                     x = int.Parse(s[i + 1].ToString());
                     flag = true;
                 }
-                if (s[i] == ',' && flag == true)
+                if (s[i] == ' ' && flag == true)
                 {
                     y = int.Parse(s[i + 1].ToString());
-                    flag = false;
+                    break;
                 }
             }
             if (s.Contains("NORTH"))
