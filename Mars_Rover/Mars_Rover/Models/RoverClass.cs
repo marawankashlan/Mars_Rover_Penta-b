@@ -17,10 +17,10 @@ namespace Mars_Rover.Models
         public RoverClass(String c,String s)
         {
             direction = new Dictionary<int, string>();
-            direction.Add(0, "NORTH");
-            direction.Add(90, "EAST");
-            direction.Add(180, "SOUTH");
-            direction.Add(270, "WEST");
+            direction.Add(90, "NORTH");
+            direction.Add(0, "EAST");
+            direction.Add(270, "SOUTH");
+            direction.Add(180, "WEST");
 
             CoordList = new List<string>();
             flag = false;
@@ -42,83 +42,18 @@ namespace Mars_Rover.Models
 
         private void SetNewCoord(ref int x,ref int y,ref int dir,char comm)
         {
-
-            if (dir == 0)//north
-            {
-                if (comm == 'F')
-                {
-                    y += 1;
-                }
-                else if (comm == 'B')
-                {
-                    y -= 1;
-                }
-                else if (comm == 'L')
-                {
-                    dir = 270;
-                }
-                else
-                {
-                    dir = 90;
-                }
-            }
-            else if (dir == 90)//east
-            {
-                if (comm == 'F')
-                {
-                    x += 1;
-                }
-                else if (comm == 'B')
-                {
-                    x -= 1;
-                }
-                else if (comm == 'L')
-                {
-                    dir = 0;
-                }
-                else
-                {
-                    dir = 180;
-                }
-            }
-            else if (dir == 180)//south
-            {
-                if (comm == 'F')
-                {
-                    y -= 1;
-                }
-                else if (comm == 'B')
-                {
-                    y += 1;
-                }
-                else if (comm == 'L')
-                {
-                    dir = 90;
-                }
-                else
-                {
-                    dir = 270;
-                }
-            }
-            else if (dir == 270)//west
-            {
-                if (comm == 'F')
-                {
-                    x -= 1;
-                }
-                else if (comm == 'B')
-                {
-                    x += 1;
-                }
-                else if (comm == 'L')
-                {
-                    dir = 180;
-                }
-                else
-                {
-                    dir = 0;
-                }
-            }
+            if ((comm == 'F' && dir == 0) || (comm == 'B' && dir == 180))
+                x += 1;
+           else if ((comm == 'B' && dir == 0) || (comm == 'F' && dir == 180))
+                x -= 1;
+           else if ((comm == 'F' && dir == 90) || (comm == 'B' && dir == 270))
+                y += 1;
+           else  if ((comm == 'B' && dir == 90) || (comm == 'F' && dir == 270))
+                y -= 1;
+            else if (comm == 'L')
+                dir = ((dir + 90) == 360) ? (360 - (dir + 90)) : (dir + 90);
+            else if (comm == 'R')
+                dir = ((dir - 90) == -90) ? (360 + (dir - 90)) : (dir - 90);
 
             CoordList.Add("(" + x + ", " + y + ")" + direction[dir]);
         }
@@ -169,13 +104,13 @@ namespace Mars_Rover.Models
                 }
             }
             if (s.Contains("NORTH"))
-                dir = 0;
-            else if (s.Contains("EAST"))
                 dir = 90;
+            else if (s.Contains("EAST"))
+                dir = 0;
             else if (s.Contains("SOUTH"))
-                dir = 180;
-            else
                 dir = 270;
+            else
+                dir = 180;
         }
     }
 }
