@@ -22,5 +22,20 @@ namespace Mars_Rover_UnitTest
             //Assert
             Assert.AreEqual(expected, output, "Rover didn't follow the commands correctly");
         }
+        [TestMethod]
+        public void MoveRover_CorrectCommit2_FollowCommand()
+        {
+            //Arrange
+            String commands = "FLFFRFLB";
+            String start = "(4,2,EAST)";
+            String expected = "(6,3)North";
+            RoverClass rover = new RoverClass(commands, start);
+
+            //Act
+            String output = rover.MoveRover();
+
+            //Assert
+            Assert.AreEqual(expected, output, "Rover didn't follow the commands correctly");
+        }
     }
 }
