@@ -10,16 +10,19 @@ namespace Mars_Rover.Models
         public String commands;
         public String start;
         public IDictionary<int, string> direction;
+        public List<String> CoordList;
         private int x, y, dir;
         private Boolean flag;
+
         public RoverClass(String c,String s)
         {
             direction = new Dictionary<int, string>();
-            direction.Add(0, "North");
-            direction.Add(90, "East");
-            direction.Add(180, "South");
-            direction.Add(270, "West");
+            direction.Add(0, "NORTH");
+            direction.Add(90, "EAST");
+            direction.Add(180, "SOUTH");
+            direction.Add(270, "WEST");
 
+            CoordList = new List<string>();
             flag = false;
             this.commands = c;
             this.start = s;
@@ -27,33 +30,11 @@ namespace Mars_Rover.Models
             y = 0;
             dir = 0;
         }
+
         public String MoveRover()
         {
             String finalpos = "";
-            //reading the start point
-            int x = 0, y = 0, dir = 0;
-            Boolean flag = false;
-            for (int i = 0; i < start.Length; i++)
-            {
-                if (start[i] == '(')
-                {
-                    x = int.Parse(start[i + 1].ToString());
-                    flag = true;
-                }
-                if (start[i] == ',' && flag == true)
-                {
-                    y = int.Parse(start[i + 1].ToString());
-                    flag = false;
-                }
-            }
-            if (start.Contains("NORTH"))
-                dir = 0;
-            else if (start.Contains("EAST"))
-                dir = 90;
-            else if (start.Contains("SOUTH"))
-                dir = 180;
-            else
-                dir = 270;
+            Convert_String(start, ref x, ref y, ref dir);
 
             foreach (char command in commands) SetNewCoord(ref x,ref y,ref dir, command);
 
@@ -61,8 +42,10 @@ namespace Mars_Rover.Models
             finalpos= "(" + x + "," + y + ")" + start;
             return finalpos;
         }
+
         private void SetNewCoord(ref int x,ref int y,ref int dir, char comm)
         {
+
             if (dir == 0)//north
             {
                 if (comm == 'F')
@@ -139,104 +122,71 @@ namespace Mars_Rover.Models
                     dir = 0;
                 }
             }
+
+            start = direction[dir];
+            CoordList.Add("(" + x + "," + y + ")" + start);
         }
+
         public String Check_Obstacles(List<KeyValuePair<int, int>> obs)
         {
+            String finalpos = MoveRover();
+            Boolean obst = false;
+
+            finalpos= Obs(x,y,dir,CoordList, obs);
+
+            return finalpos;
+        }
+
+        private String Obs(int xx,int yy,int dirr, List<String> coordinate, List<KeyValuePair<int, int>> test)
+        {
             String finalpos = "";
-            for (int i = 0; i < start.Length; i++)
+            Boolean check = false;
+            int counter = 0;
+            foreach (String coord in coordinate)
+            {
+                Convert_String(coord, ref xx, ref yy, ref dirr);
+                counter++;
+                foreach (KeyValuePair<int, int> kvp in test)
+                    if (kvp.Key == xx && kvp.Value == yy)
+                    {
+                        check = true;
+                    }
+            }
+            if (check== true)
+            {
+                finalpos = coordinate[counter-1]+ " " + "STOPPED";
+            }
+            else
+                finalpos = coordinate[coordinate.Count-1];
+
+            return finalpos;
+        }
+
+        private void Convert_String(String s,ref int x,ref int y,ref int dir)
+        {
+            //reading the start point
+            Boolean flag = false;
+            for (int i = 0; i < s.Length; i++)
             {
                 if (start[i] == '(')
                 {
-                    x = int.Parse(start[i + 1].ToString());
+                    x = int.Parse(s[i + 1].ToString());
                     flag = true;
                 }
-                if (start[i] == ',' && flag == true)
+                if (s[i] == ',' && flag == true)
                 {
-                    y = int.Parse(start[i + 1].ToString());
+                    y = int.Parse(s[i + 1].ToString());
                     flag = false;
                 }
             }
-            if (start.Contains("NORTH"))
+            if (s.Contains("NORTH"))
                 dir = 0;
-            else if (start.Contains("EAST"))
+            else if (s.Contains("EAST"))
                 dir = 90;
-            else if (start.Contains("SOUTH"))
+            else if (s.Contains("SOUTH"))
                 dir = 180;
             else
                 dir = 270;
-
-            Boolean obst = false;
-            foreach (char command in commands)
-            {
-                obst = Obs(x, y, dir, command, obs);
-                if (obst == true)
-                {
-                    break;
-                }
-                SetNewCoord(ref x, ref y, ref dir, command);
-            }
-            start = direction[dir];
-            if (obst == true)
-            {
-                finalpos = "(" + x + "," + y + ")" + start + " " + "STOPPED";
-            }
-            else
-                finalpos = "(" + x + "," + y + ")" + start;
-            return finalpos;
-        }
-        private Boolean Obs(int x, int y, int dir, char comm, List<KeyValuePair<int, int>> test)
-        {
-            Boolean check = false;
-            if (dir == 0)//north
-            {
-                if (comm == 'F')
-                {
-                    y += 1;
-                }
-                else if (comm == 'B')
-                {
-                    y -= 1;
-                }
-            }
-            else if (dir == 90)//east
-            {
-                if (comm == 'F')
-                {
-                    x += 1;
-                }
-                else if (comm == 'B')
-                {
-                    x -= 1;
-                }
-            }
-            else if (dir == 180)//south
-            {
-                if (comm == 'F')
-                {
-                    y -= 1;
-                }
-                else if (comm == 'B')
-                {
-                    y += 1;
-                }
-            }
-            else if (dir == 270)//west
-            {
-                if (comm == 'F')
-                {
-                    x -= 1;
-                }
-                else if (comm == 'B')
-                {
-                    x += 1;
-                }
-            }
-            foreach (KeyValuePair<int, int> kvp in test)
-                if (kvp.Key == x || kvp.Value == y)
-                {
-                    check = true;
-                }
-            return check;
         }
     }
 }
