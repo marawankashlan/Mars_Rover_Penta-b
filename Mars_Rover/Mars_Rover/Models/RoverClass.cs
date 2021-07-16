@@ -43,7 +43,7 @@ namespace Mars_Rover.Models
             return finalpos;
         }
 
-        private void SetNewCoord(ref int x,ref int y,ref int dir, char comm)
+        private void SetNewCoord(ref int x,ref int y,ref int dir,char comm)
         {
 
             if (dir == 0)//north
@@ -130,7 +130,6 @@ namespace Mars_Rover.Models
         public String Check_Obstacles(List<KeyValuePair<int, int>> obs)
         {
             String finalpos = MoveRover();
-            Boolean obst = false;
 
             finalpos= Obs(x,y,dir,CoordList, obs);
 
@@ -142,17 +141,19 @@ namespace Mars_Rover.Models
             String finalpos = "";
             Boolean check = false;
             int counter = 0;
-            foreach (String coord in coordinate)
+            foreach (String coord in coordinate)//string
             {
                 Convert_String(coord, ref xx, ref yy, ref dirr);
-                counter++;
-                foreach (KeyValuePair<int, int> kvp in test)
+                foreach (KeyValuePair<int, int> kvp in test)//obs
                     if (kvp.Key == xx && kvp.Value == yy)
                     {
                         check = true;
+                        counter = coordinate.IndexOf(coord);
+                        break;
                     }
+                if (check) break;
             }
-            if (check== true)
+            if (check)
             {
                 finalpos = coordinate[counter-1]+ " " + "STOPPED";
             }
@@ -168,7 +169,7 @@ namespace Mars_Rover.Models
             Boolean flag = false;
             for (int i = 0; i < s.Length; i++)
             {
-                if (start[i] == '(')
+                if (s[i] == '(')
                 {
                     x = int.Parse(s[i + 1].ToString());
                     flag = true;
