@@ -12,7 +12,7 @@ namespace Mars_Rover.Models
         public IDictionary<int, string> direction;
         private int x, y, dir;
         private Boolean flag;
-        RoverClass(String c,String s)
+        public RoverClass(String c,String s)
         {
             direction = new Dictionary<int, string>();
             direction.Add(0, "North");
@@ -27,7 +27,7 @@ namespace Mars_Rover.Models
             y = 0;
             dir = 0;
         }
-        public String part1()
+        public String MoveRover()
         {
             String finalpos = "";
             //reading the start point
@@ -58,10 +58,10 @@ namespace Mars_Rover.Models
             foreach (char command in commands) SetNewCoord(ref x,ref y,ref dir, command);
 
             start = direction[dir];
-            finalpos= "(" + x + "," + y + "," + start + ")";
+            finalpos= "(" + x + "," + y + ")" + start;
             return finalpos;
         }
-        public void SetNewCoord(ref int x,ref int y,ref int dir, char comm)
+        private void SetNewCoord(ref int x,ref int y,ref int dir, char comm)
         {
             if (dir == 0)//north
             {
