@@ -140,5 +140,103 @@ namespace Mars_Rover.Models
                 }
             }
         }
+        public String Check_Obstacles(List<KeyValuePair<int, int>> obs)
+        {
+            String finalpos = "";
+            for (int i = 0; i < start.Length; i++)
+            {
+                if (start[i] == '(')
+                {
+                    x = int.Parse(start[i + 1].ToString());
+                    flag = true;
+                }
+                if (start[i] == ',' && flag == true)
+                {
+                    y = int.Parse(start[i + 1].ToString());
+                    flag = false;
+                }
+            }
+            if (start.Contains("NORTH"))
+                dir = 0;
+            else if (start.Contains("EAST"))
+                dir = 90;
+            else if (start.Contains("SOUTH"))
+                dir = 180;
+            else
+                dir = 270;
+
+            Boolean obst = false;
+            foreach (char command in commands)
+            {
+                obst = Obs(x, y, dir, command, obs);
+                if (obst == true)
+                {
+                    break;
+                }
+                SetNewCoord(ref x, ref y, ref dir, command);
+            }
+            start = direction[dir];
+            if (obst == true)
+            {
+                finalpos = "(" + x + "," + y + ")" + start + " " + "STOPPED";
+            }
+            else
+                finalpos = "(" + x + "," + y + ")" + start;
+            return finalpos;
+        }
+        private Boolean Obs(int x, int y, int dir, char comm, List<KeyValuePair<int, int>> test)
+        {
+            Boolean check = false;
+            if (dir == 0)//north
+            {
+                if (comm == 'F')
+                {
+                    y += 1;
+                }
+                else if (comm == 'B')
+                {
+                    y -= 1;
+                }
+            }
+            else if (dir == 90)//east
+            {
+                if (comm == 'F')
+                {
+                    x += 1;
+                }
+                else if (comm == 'B')
+                {
+                    x -= 1;
+                }
+            }
+            else if (dir == 180)//south
+            {
+                if (comm == 'F')
+                {
+                    y -= 1;
+                }
+                else if (comm == 'B')
+                {
+                    y += 1;
+                }
+            }
+            else if (dir == 270)//west
+            {
+                if (comm == 'F')
+                {
+                    x -= 1;
+                }
+                else if (comm == 'B')
+                {
+                    x += 1;
+                }
+            }
+            foreach (KeyValuePair<int, int> kvp in test)
+                if (kvp.Key == x || kvp.Value == y)
+                {
+                    check = true;
+                }
+            return check;
+        }
     }
 }
