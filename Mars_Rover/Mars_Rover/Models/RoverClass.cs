@@ -30,9 +30,6 @@ namespace Mars_Rover.Models
         public String part1()
         {
             String finalpos = "";
-            Queue<char> comm = new Queue<char>();
-            char c;
-
             //reading the start point
             int x = 0, y = 0, dir = 0;
             Boolean flag = false;
@@ -58,33 +55,14 @@ namespace Mars_Rover.Models
             else
                 dir = 270;
 
+            foreach (char command in commands) SetNewCoord(ref x,ref y,ref dir, command);
 
-            //reading the commands
-            for (int i = 0; i < commands.Length; i++)
-            {
-                comm.Enqueue(commands[i]);
-            }
-
-            String temp;
-            string[] news;
-            int counter = comm.Count;
-            for (int j = 0; j < counter; j++)
-            {
-                c = comm.Dequeue();
-                temp = SetNewCoord(x, y, dir, c);
-                news = temp.Split(' ');
-                x = int.Parse(news[0].ToString());
-                y = int.Parse(news[1].ToString());
-                dir = int.Parse(news[2].ToString());
-            }
             start = direction[dir];
-            Console.WriteLine("(" + x + "," + y + "," + start + ")");
+            finalpos= "(" + x + "," + y + "," + start + ")";
             return finalpos;
         }
-        public String SetNewCoord(int x,int y,int dir, char comm)
+        public void SetNewCoord(ref int x,ref int y,ref int dir, char comm)
         {
-
-            String newcoord = "";
             if (dir == 0)//north
             {
                 if (comm == 'F')
@@ -161,9 +139,6 @@ namespace Mars_Rover.Models
                     dir = 0;
                 }
             }
-            newcoord = x + " " + y + " " + dir;
-            return newcoord;
-
         }
     }
 }
