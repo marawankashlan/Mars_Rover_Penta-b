@@ -69,7 +69,6 @@ namespace Mars_Rover.Models
         {
             Boolean check = false;
             int counter = 0;
-
             foreach (String coord in coordinate)//string
             {
                 Convert_String(coord, ref xx, ref yy, ref dirr);
@@ -111,6 +110,43 @@ namespace Mars_Rover.Models
                 dir = 270;
             else
                 dir = 180;
+        }
+
+        private void forward(int dir, ref int x, ref int y, ref String command)
+        {
+            if (dir == 0) x += 1;
+            else if (dir == 90) y += 1;
+            else if (dir == 180) x -= 1;
+            else y -= 1;
+
+            command += 'F';
+        }
+        private void back(int dir, ref int x, ref int y, ref String command)
+        {
+            if (dir == 0) x -= 1;
+            else if (dir == 90) y -= 1;
+            else if (dir == 180) x += 1;
+            else y += 1;
+
+            command += 'B';
+        }
+        private void left(ref int dir, ref String command)
+        {
+            if (dir == 0) dir += 90;
+            else if (dir == 90) dir += 90;
+            else if (dir == 180) dir += 90;
+            else dir = 0;
+
+            command += 'L';
+        }
+        private void right(ref int dir, ref String command)
+        {
+            if (dir == 0) dir = 270;
+            else if (dir == 90) dir -= 90;
+            else if (dir == 180) dir -= 90;
+            else dir -= 90;
+
+            command += 'R';
         }
     }
 }
