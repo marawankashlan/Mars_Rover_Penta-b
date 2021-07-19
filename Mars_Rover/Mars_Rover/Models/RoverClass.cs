@@ -65,6 +65,13 @@ namespace Mars_Rover.Models
             return CoordList[CoordList.Count - 1];
         }
 
+        private String MoveRover(String commands, ref int x, ref int y, ref int dir)
+        {
+            foreach (char command in commands) SetNewCoord(ref x, ref y, ref dir, command);
+
+            return CoordList[CoordList.Count - 1];
+        }
+
         private void SetNewCoord(ref int x,ref int y,ref int dir,char comm)
         {
             if ((comm == 'F' && dir == 0) || (comm == 'B' && dir == 180))
@@ -137,14 +144,14 @@ namespace Mars_Rover.Models
                 dir = 180;
         }
 
-        public String PathAndCommand(String st,String end,List<KeyValuePair<int, int>> obs)
+        public String PathAndCommand(String start,String end,List<KeyValuePair<int, int>> obs)
         {
-            this.start = st;
+            this.start = start;
             this.end = end;
+
             Convert_String(start, ref x, ref y, ref dir);
             int tempDir = dir;
             Convert_String(end, ref end_x, ref end_y, ref dir);
-            //Console.WriteLine("end " + end_x + " " + end_y);
             dir = tempDir;
             Boolean q = is_OBS(x, y, obs);
             if (q) return "obs";
@@ -172,7 +179,6 @@ namespace Mars_Rover.Models
                             children[i].pred = u;
                             queue.Enqueue(children[i]);
 
-
                             if (children[i].coordinate.x == end_x && children[i].coordinate.y == end_y)
                             {
                                 found = true;
@@ -189,38 +195,32 @@ namespace Mars_Rover.Models
                 }
                 if (found) break;
             }
-            //for (int i = 0; i < path1.Count; i++)
-            //{
-            //    Console.WriteLine("(" + path1[i].coordinate.x + ", " + path1[i].coordinate.y + ")");
-            //}
-            //Console.WriteLine(dir);
-
             return getComm(dir, path1);
         }
 
-        private String getComm(int direct, List<Node> path)
+        private String getComm(int dir, List<Node> path)
         {
             String command = "", c = "";
+            int tempx, tempy, tempDir;
             String[] str = { "F", "B", "LB", "LF", "RB", "RF" };
 
             for (int i = 0; i < path.Count - 1; i++)
             {
                 for (int j = 0; j < str.Length; j++)
                 {
-                    x = path[i].coordinate.x;
-                    y = path[i].coordinate.y;
-                    dir = direct;
-                    commands = str[j];
-                    command = MoveRover();
-                    Convert_String(command, ref x, ref y, ref dir);
-                    if (path[i + 1].coordinate.x == x && path[i + 1].coordinate.y == y)
+                    tempx = path[i].coordinate.x;
+                    tempy = path[i].coordinate.y;
+                    tempDir = dir;
+                    command = MoveRover(str[j], ref tempx, ref tempy, ref dir);
+                    Convert_String(command, ref tempx, ref tempy, ref dir);
+                    if (path[i + 1].coordinate.x == tempx && path[i + 1].coordinate.y == tempy)
                     {
                         c += str[j];
-                        direct = dir;
-                        //Console.WriteLine("Command is " + str[j]);
+                        tempDir = dir;
                         break;
                     }
-                    dir = direct;
+                    dir = tempDir;
+
                 }
 
             }

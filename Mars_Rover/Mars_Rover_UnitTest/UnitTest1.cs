@@ -58,5 +58,28 @@ namespace Mars_Rover_UnitTest
             //Assert
             Assert.AreEqual(expected, output, "Rover didn't follow the commands correctly");
         }
+        [TestMethod]
+        public void PathAndCommand_CorrectFlow_CorrectCommands()
+        {
+            //Arrange
+            List<KeyValuePair<int, int>> obs = new List<KeyValuePair<int, int>>();
+            String end = "(6, 7)";
+            String start = "(4, 2, EAST)";
+            String expected = "BLFFFFLBBBLB";
+            RoverClass rover = new RoverClass();
+            obs.Add(new KeyValuePair<int, int>(1, 3));
+            obs.Add(new KeyValuePair<int, int>(5, 2));
+            obs.Add(new KeyValuePair<int, int>(6, 5));
+            obs.Add(new KeyValuePair<int, int>(7, 4));
+            obs.Add(new KeyValuePair<int, int>(5, 5));
+            obs.Add(new KeyValuePair<int, int>(4, 3));
+            obs.Add(new KeyValuePair<int, int>(5, 7));
+
+            //Act
+            String output = rover.PathAndCommand(start,end,obs);
+
+            //Assert
+            Assert.AreEqual(expected, output, "Rover didn't reach the endpoint safely");
+        }
     }
 }

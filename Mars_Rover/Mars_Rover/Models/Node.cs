@@ -8,7 +8,6 @@ namespace Mars_Rover.Models
     public class Node
     {
         public Coordinates coordinate;
-        //static int count;
         public Boolean visited;
         public Node pred;
 
@@ -29,7 +28,6 @@ namespace Mars_Rover.Models
             for (int i = 0; i < 4; i++)
             {
                 Node a = new Node(this.coordinate.x + dx[i], this.coordinate.y + dy[i]);
-                //Console.WriteLine(a.coordinate.x + " " + a.coordinate.y);
                 a = a.checkNode(allNodes);
                 adj.Add(a);
             }
