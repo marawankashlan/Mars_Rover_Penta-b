@@ -121,16 +121,33 @@ namespace Mars_Rover.Models
         {
             //reading the start point
             flag = false;
+            String tempp,qq,ww;
             for (int i = 0; i < s.Length; i++)
             {
-                if (s[i] == '(')
+                if (s[i] == '('&& s[i + 1] != '-')
                 {
                     x = int.Parse(s[i + 1].ToString());
                     flag = true;
                 }
-                if (s[i] == ' ' && flag == true)
+                if (s[i] == '('&&s[i+1]=='-')
+                {
+                    ww = s[i + 1].ToString();
+                    qq= s[i + 2].ToString();
+                    tempp = (ww+qq);
+                    x = int.Parse(tempp);
+                    flag = true;
+                }
+                if (s[i] == ' ' && flag == true&& s[i + 1] != '-')
                 {
                     y = int.Parse(s[i + 1].ToString());
+                    break;
+                }
+                if (s[i] == ' ' && flag == true&& s[i + 1] == '-')
+                {
+                    ww = s[i + 1].ToString();
+                    qq = s[i + 2].ToString();
+                    tempp = (ww + qq);
+                    y = int.Parse(tempp);
                     break;
                 }
             }
