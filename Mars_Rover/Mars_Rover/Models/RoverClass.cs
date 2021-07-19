@@ -13,6 +13,11 @@ namespace Mars_Rover.Models
         public List<String> CoordList;
         private int x, y, dir;
         private Boolean flag;
+        String end;
+        private List<Node> allNodes;
+        private int end_x, end_y;
+        private Queue<Node> queue;
+        List<Node> path1;
 
         public RoverClass(String c,String s)
         {
@@ -23,12 +28,32 @@ namespace Mars_Rover.Models
             direction.Add(180, "WEST");
 
             CoordList = new List<string>();
+            allNodes = new List<Node>();
             flag = false;
             this.commands = c;
             this.start = s;
             x = 0;
             y = 0;
             dir = 0;
+        }
+        public RoverClass()
+        {
+            direction = new Dictionary<int, string>();
+            direction.Add(90, "NORTH");
+            direction.Add(0, "EAST");
+            direction.Add(270, "SOUTH");
+            direction.Add(180, "WEST");
+
+            CoordList = new List<string>();
+            allNodes = new List<Node>();
+            queue = new Queue<Node>();
+            path1 = new List<Node>();
+            flag = false;
+            x = 0;
+            y = 0;
+            dir = 0;
+            end_x = 0;
+            end_y = 0;
         }
 
         public String MoveRover()
@@ -112,41 +137,122 @@ namespace Mars_Rover.Models
                 dir = 180;
         }
 
-        private void forward(int dir, ref int x, ref int y, ref String command)
+        public String PathAndCommand(String st,String end,List<KeyValuePair<int, int>> obs)
         {
-            if (dir == 0) x += 1;
-            else if (dir == 90) y += 1;
-            else if (dir == 180) x -= 1;
-            else y -= 1;
+            this.start = st;
+            this.end = end;
+            Convert_String(start, ref x, ref y, ref dir);
+            int tempDir = dir;
+            Convert_String(end, ref end_x, ref end_y, ref dir);
+            //Console.WriteLine("end " + end_x + " " + end_y);
+            dir = tempDir;
+            Boolean q = is_OBS(x, y, obs);
+            if (q) return "obs";
+            q = is_OBS(end_x, end_y, obs);
+            if (q) return "obs";
 
-            command += 'F';
+            if (x == end_x && y == end_y) return "";
+
+            Node src = new Node(x, y);
+            allNodes.Add(src);
+            src.visited = true;
+            queue.Enqueue(src);
+            Boolean found = false;
+            while (queue.Count != 0)
+            {
+                Node u = queue.Dequeue();
+                List<Node> children = u.getAdj(allNodes);
+                for (int i = 0; i < children.Count; i++)
+                {
+                    if (children[i].visited == false)
+                    {
+                        if (!is_OBS(children[i].coordinate.x, children[i].coordinate.y, obs))
+                        {
+                            children[i].visited = true;
+                            children[i].pred = u;
+                            queue.Enqueue(children[i]);
+
+
+                            if (children[i].coordinate.x == end_x && children[i].coordinate.y == end_y)
+                            {
+                                found = true;
+                                path1 = path(children[i]);
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            children[i].visited = true;
+                        }
+                    }
+
+                }
+                if (found) break;
+            }
+            //for (int i = 0; i < path1.Count; i++)
+            //{
+            //    Console.WriteLine("(" + path1[i].coordinate.x + ", " + path1[i].coordinate.y + ")");
+            //}
+            //Console.WriteLine(dir);
+
+            return getComm(dir, path1);
         }
-        private void back(int dir, ref int x, ref int y, ref String command)
-        {
-            if (dir == 0) x -= 1;
-            else if (dir == 90) y -= 1;
-            else if (dir == 180) x += 1;
-            else y += 1;
 
-            command += 'B';
+        private String getComm(int direct, List<Node> path)
+        {
+            String command = "", c = "";
+            String[] str = { "F", "B", "LB", "LF", "RB", "RF" };
+
+            for (int i = 0; i < path.Count - 1; i++)
+            {
+                for (int j = 0; j < str.Length; j++)
+                {
+                    x = path[i].coordinate.x;
+                    y = path[i].coordinate.y;
+                    dir = direct;
+                    commands = str[j];
+                    command = MoveRover();
+                    Convert_String(command, ref x, ref y, ref dir);
+                    if (path[i + 1].coordinate.x == x && path[i + 1].coordinate.y == y)
+                    {
+                        c += str[j];
+                        direct = dir;
+                        //Console.WriteLine("Command is " + str[j]);
+                        break;
+                    }
+                    dir = direct;
+                }
+
+            }
+            return c;
         }
-        private void left(ref int dir, ref String command)
-        {
-            if (dir == 0) dir += 90;
-            else if (dir == 90) dir += 90;
-            else if (dir == 180) dir += 90;
-            else dir = 0;
 
-            command += 'L';
+        private Boolean is_OBS(int x, int y, List<KeyValuePair<int, int>> o)
+        {
+            Boolean obs = false;
+            foreach (KeyValuePair<int, int> kvp in o)//obs
+            {
+                if (kvp.Key == x && kvp.Value == y)
+                {
+                    obs = true;
+                    break;
+                }
+            }
+            return obs;
         }
-        private void right(ref int dir, ref String command)
-        {
-            if (dir == 0) dir = 270;
-            else if (dir == 90) dir -= 90;
-            else if (dir == 180) dir -= 90;
-            else dir -= 90;
 
-            command += 'R';
+        private List<Node> path(Node dest)
+        {
+            List<Node> path = new List<Node>();
+            Node crawl = dest;
+            path.Add(crawl);
+            while (crawl.pred != null)
+            {
+                path.Add(crawl.pred);
+                crawl = crawl.pred;
+            }
+            path.Reverse();
+            return path;
         }
     }
 }
