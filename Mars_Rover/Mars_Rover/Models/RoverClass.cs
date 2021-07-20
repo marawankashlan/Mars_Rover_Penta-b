@@ -18,7 +18,7 @@ namespace Mars_Rover.Models
         private int end_x, end_y;
         private Queue<Node> queue;
         List<Node> path1;
-        Boolean ex;
+        private Boolean ex;
         //this constructor will be called before the first two problems giving them the start point and the commands to follow.
         public RoverClass(String c,String s)
         {
@@ -27,7 +27,7 @@ namespace Mars_Rover.Models
             direction.Add(0, "EAST");
             direction.Add(270, "SOUTH");
             direction.Add(180, "WEST");
-
+            ex = false;
             CoordList = new List<string>();
             allNodes = new List<Node>();
             flag = false;
@@ -46,7 +46,7 @@ namespace Mars_Rover.Models
             direction.Add(0, "EAST");
             direction.Add(270, "SOUTH");
             direction.Add(180, "WEST");
-
+            ex = false;
             CoordList = new List<string>();
             allNodes = new List<Node>();
             queue = new Queue<Node>();
@@ -64,7 +64,8 @@ namespace Mars_Rover.Models
         {
             //take the start string and split it into x,y coordinates and the heading of the rover. 
             Convert_String(start, ref x, ref y, ref dir);
-
+            if (ex)
+                return ("Incorrect input format");
             //for each command in the string of commands SetNewCoord function takes the current position and heading of the rover and apply the command on them.
             foreach (char command in commands) SetNewCoord(ref x,ref y,ref dir, command);
               
@@ -106,10 +107,13 @@ namespace Mars_Rover.Models
         //this function calls the first problem functions to make the rover follow the commands and save its position and heading of each command in a list
         public String Check_Obstacles(List<KeyValuePair<int, int>> obs)
         {
-            MoveRover();
+            String exp=MoveRover();
+            if (exp == "Incorrect input format")
+                return exp;
 
             //call obs function that will return if the rover path includes an obstacle or not
-            return Obs(x, y, dir, CoordList, obs);
+            else
+                return Obs(x, y, dir, CoordList, obs);
         }
 
         //this function takes the rover position,heading,list of rover path, and the list of obstacles.
@@ -141,79 +145,132 @@ namespace Mars_Rover.Models
             flag = false;
             String tempp,qq,ww,t;
             int counter;
-            for (int i = 0; i < s.Length; i++)
+            if (s[0] != '(')
             {
-                if (s[i] == '(' && s[i + 1] != '-')
+                ex = true;
+            }
+            else
+            {
+                for (int i = 0; i < s.Length; i++)
                 {
-                    counter = i;
-                    t = "";
-                    while (true)
+                    if (s[i] == '(' && s[i + 1] != '-')
                     {
-                        if (Char.IsDigit(s[counter + 1]))
+                        counter = i;
+                        t = "";
+                        while (true)
                         {
-                            t += s[counter + 1];
+                            if (Char.IsDigit(s[counter + 1]))
+                            {
+                                t += s[counter + 1];
+                            }
+                            else
+                                break;
+                            counter++;
+                        }                       
+                        if (s[counter + 1] != ',' || s[counter + 2] != ' ')
+                        { ex = true; }
+                        try
+                        {
+                            x = int.Parse(t);
+                            flag = true;
                         }
-                        else
+                        catch (Exception e)
+                        {
+                            ex = true;
                             break;
-                        counter++;
+                        }
                     }
-                    x = int.Parse(t);
-                    flag = true;
-                }
-                if (s[i] == '(' && s[i + 1] == '-')
-                {
-                    ww = s[i + 1].ToString();
-                    counter = i + 2;
-                    t = "";
-                    while (true)
+                    if (s[i] == '(' && s[i + 1] == '-')
                     {
-                        if (Char.IsDigit(s[counter]))
+                        ww = s[i + 1].ToString();
+                        counter = i + 2;
+                        t = "";
+                        while (true)
                         {
-                            t += s[counter];
+                            if (Char.IsDigit(s[counter]))
+                            {
+                                t += s[counter];
+                            }
+                            else
+                                break;
+                            counter++;
                         }
-                        else
+                        if (s[counter] != ',' || s[counter + 1] != ' ')
+                        { ex = true; }
+                        try
+                        {
+                            t = ww + t;
+                            x = int.Parse(t);
+                            flag = true;
+                        }
+                        catch(Exception e)
+                        {
+                            ex = true;
                             break;
-                        counter++;
+                        }
                     }
-                    t = ww + t;
-                    x = int.Parse(t.ToString());
-                    flag = true;
-                }
-                if (s[i] == ' ' && flag == true && s[i + 1] != '-')
-                {
-                    counter = i;
-                    t = "";
-                    while (true)
+                    if (s[i] == ' ' && flag == true && s[i + 1] != '-')
                     {
-                        if (Char.IsDigit(s[counter + 1]))
+                        counter = i;
+                        t = "";
+                        while (true)
                         {
-                            t += s[counter + 1];
-                        }
-                        else
+                            if (Char.IsDigit(s[counter + 1]))
+                            {
+                                t += s[counter + 1];
+                            }
+                            else
+                                break;
+                            counter++;
+                        }                       
+                        if (s[counter + 1] != ',' && s[counter + 1] != ')')
+                            ex = true;
+                        if (s[i - 1] != ',')
+                            ex = true;
+
+                        try
+                        {
+                            y = int.Parse(t);
                             break;
-                        counter++;
+                        }
+                        catch (Exception e)
+                        {
+                            ex = true;
+                            break;
+                        }
                     }
-                    y = int.Parse(t);
-                    break;
-                }
-                if (s[i] == ' ' && flag == true && s[i + 1] == '-')
-                {
-                    ww = s[i + 1].ToString();
-                    counter = i + 2;
-                    t = "";
-                    while (true)
+                    if (s[i] == ' ' && flag == true && s[i + 1] == '-')
                     {
-                        if (Char.IsDigit(s[counter]))
+                        ww = s[i + 1].ToString();
+                        counter = i + 2;
+                        t = "";
+                        while (true)
                         {
-                            t += s[counter];
+                            if (Char.IsDigit(s[counter]))
+                            {
+                                t += s[counter];
+                            }
+                            else
+                                break;
+                            counter++;
                         }
-                        else
+                        if(s[i-1]!=',')
+                            ex = true;
+                        if (s[counter] != ','&& s[counter] != ')')
+                            ex = true;
+                        t = ww + t;
+                        try
+                        {
+                            y = int.Parse(t);
                             break;
-                        counter++;
+                        }
+                        catch (Exception e)
+                        {
+                            ex = true;
+                            break;
+                        }
+
                     }
-                    t = ww + t;
-                    y = int.Parse(t.ToString());
-                    break;
                 }
             }
             if (s.Contains("NORTH"))
@@ -224,8 +281,6 @@ namespace Mars_Rover.Models
                 dir = 270;
             else if (s.Contains("WEST"))
                 dir = 180;
-            else
-                ex = true;
         }
 
         //this function is used to solve the third problem, It takes the start and endpoint with the list of obstacles
@@ -235,8 +290,14 @@ namespace Mars_Rover.Models
             this.end = end;
             //convert the start and endpoint to coordinate and heading 
             Convert_String(start, ref x, ref y, ref dir);
+            if(ex)
+                return "Incorrect input format";
+
             int tempDir = dir;
             Convert_String(end, ref end_x, ref end_y, ref dir);
+            if (ex)
+                return "Incorrect input format";
+
             dir = tempDir;
             //check if the start or the endpoint are obstacles 
             Boolean q = is_OBS(x, y, obs);
