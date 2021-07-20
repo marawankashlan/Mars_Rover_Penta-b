@@ -160,6 +160,7 @@ namespace Mars_Rover_UnitTest
             //Assert
             Assert.AreEqual(expected, output, "Rover didn't follow the commands correctly");
         }
+
         /// <summary>
         /// Problem 2 test cases
         /// First test case is a correct commit of commands given to the rover until it faced an obstacle so it stopped in the step before it.
@@ -184,8 +185,68 @@ namespace Mars_Rover_UnitTest
             //Assert
             Assert.AreEqual(expected, output, "Rover didn't follow the commands correctly");
         }
+        [TestMethod]
+        public void Check_Obstacles_CorrectCommit2_FollowCommand()
+        {
+            //Arrange
+            List<KeyValuePair<int, int>> obs = new List<KeyValuePair<int, int>>();
 
+            String commands = "BRFFRBLBLL";
+            String start = "(100, -1,WEST)";
+            String expected = "(100, 1)NORTH STOPPED";
+            RoverClass rover = new RoverClass(commands, start);
+            obs.Add(new KeyValuePair<int, int>(102, 1));
+            obs.Add(new KeyValuePair<int, int>(101, -2));
+            obs.Add(new KeyValuePair<int, int>(100, 0));
+            obs.Add(new KeyValuePair<int, int>(99, 0));
+            obs.Add(new KeyValuePair<int, int>(99, 1));
+            //Act
+            String output = rover.Check_Obstacles(obs);
 
+            //Assert
+            Assert.AreEqual(expected, output, "Rover didn't follow the commands correctly");
+        }
+        [TestMethod]
+        public void Check_Obstacles_CorrectCommit3_FollowCommand()
+        {
+            //Arrange
+            List<KeyValuePair<int, int>> obs = new List<KeyValuePair<int, int>>();
+
+            String commands = "FFLFFLFFR";
+            String start = "(-10, -2,SOUTH)";
+            String expected = "(-8, -4)NORTH STOPPED";
+            RoverClass rover = new RoverClass(commands, start);
+            obs.Add(new KeyValuePair<int, int>(-12, -5));
+            obs.Add(new KeyValuePair<int, int>(-11, -7));
+            obs.Add(new KeyValuePair<int, int>(-10, 0));
+            obs.Add(new KeyValuePair<int, int>(-13, -2));
+            obs.Add(new KeyValuePair<int, int>(-8, -3));
+            //Act
+            String output = rover.Check_Obstacles(obs);
+
+            //Assert
+            Assert.AreEqual(expected, output, "Rover didn't follow the commands correctly");
+        }
+        [TestMethod]
+        public void Check_Obstacles_CorrectCommit4_FollowCommand()
+        {
+            //Arrange
+            List<KeyValuePair<int, int>> obs = new List<KeyValuePair<int, int>>();
+
+            String commands = "BRBATRFFLF";
+            String start = "(11, 9,NOTRH)";
+            String expected = "(11, 6)EAST";
+            RoverClass rover = new RoverClass(commands, start);
+            obs.Add(new KeyValuePair<int, int>(11, 3));
+            obs.Add(new KeyValuePair<int, int>(10, 5));
+            obs.Add(new KeyValuePair<int, int>(9, 8));
+            obs.Add(new KeyValuePair<int, int>(12,6));
+            //Act
+            String output = rover.Check_Obstacles(obs);
+
+            //Assert
+            Assert.AreEqual(expected, output, "Rover didn't follow the commands correctly");
+        }
         /// <summary>
         /// Problem 3 test cases
         /// First one is a correct flow test case where a start and an end with the list of obstacles added and the rover will move from the start to the end avoiding all obs
