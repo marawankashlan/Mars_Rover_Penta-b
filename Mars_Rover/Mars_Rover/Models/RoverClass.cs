@@ -18,7 +18,7 @@ namespace Mars_Rover.Models
         private int end_x, end_y;
         private Queue<Node> queue;
         List<Node> path1;
-
+        Boolean ex;
         //this constructor will be called before the first two problems giving them the start point and the commands to follow.
         public RoverClass(String c,String s)
         {
@@ -108,17 +108,17 @@ namespace Mars_Rover.Models
         {
             MoveRover();
 
-            //call obs function that will return if the rover path includes an obs or not
+            //call obs function that will return if the rover path includes an obstacle or not
             return Obs(x, y, dir, CoordList, obs);
         }
 
-        //this function takes the rover position,heading,list of rover path, and the list of obs.
+        //this function takes the rover position,heading,list of rover path, and the list of obstacles.
         private String Obs(int xx,int yy,int dirr, List<String> coordinate, List<KeyValuePair<int, int>> test)
         {
             Boolean check = false;
             int counter = 0;
 
-            //for each coordinate in the rover path check if this coordinate is an obs or not
+            //for each coordinate in the rover path check if this coordinate is an obstacle or not
             foreach (String coord in coordinate)
             {
                 Convert_String(coord, ref xx, ref yy, ref dirr);
@@ -131,41 +131,88 @@ namespace Mars_Rover.Models
                     }
                 if (check) break;
             }
-            //if rover path contain an obs then return the step before the obs else return the final coordinate in the rover path.
-           return ( check ? (coordinate[counter - 1] + " " + "STOPPED") : (coordinate[coordinate.Count - 1]));
+            //if rover path contain an obstacle then return the step before the obs else return the final coordinate in the rover path.
+            return ( check ? (coordinate[counter - 1] + " " + "STOPPED") : (coordinate[coordinate.Count - 1]));
         }
 
         //this function takes a string and convert it into the rover position(x,y) and heading
         private void Convert_String(String s,ref int x,ref int y,ref int dir)
         {
             flag = false;
-            String tempp,qq,ww;
+            String tempp,qq,ww,t;
+            int counter;
             for (int i = 0; i < s.Length; i++)
             {
-                if (s[i] == '('&& s[i + 1] != '-')
+                if (s[i] == '(' && s[i + 1] != '-')
                 {
-                    x = int.Parse(s[i + 1].ToString());
+                    counter = i;
+                    t = "";
+                    while (true)
+                    {
+                        if (Char.IsDigit(s[counter + 1]))
+                        {
+                            t += s[counter + 1];
+                        }
+                        else
+                            break;
+                        counter++;
+                    }
+                    x = int.Parse(t);
                     flag = true;
                 }
-                if (s[i] == '('&&s[i+1]=='-')
+                if (s[i] == '(' && s[i + 1] == '-')
                 {
                     ww = s[i + 1].ToString();
-                    qq= s[i + 2].ToString();
-                    tempp = (ww+qq);
-                    x = int.Parse(tempp);
+                    counter = i + 2;
+                    t = "";
+                    while (true)
+                    {
+                        if (Char.IsDigit(s[counter]))
+                        {
+                            t += s[counter];
+                        }
+                        else
+                            break;
+                        counter++;
+                    }
+                    t = ww + t;
+                    x = int.Parse(t.ToString());
                     flag = true;
                 }
-                if (s[i] == ' ' && flag == true&& s[i + 1] != '-')
+                if (s[i] == ' ' && flag == true && s[i + 1] != '-')
                 {
-                    y = int.Parse(s[i + 1].ToString());
+                    counter = i;
+                    t = "";
+                    while (true)
+                    {
+                        if (Char.IsDigit(s[counter + 1]))
+                        {
+                            t += s[counter + 1];
+                        }
+                        else
+                            break;
+                        counter++;
+                    }
+                    y = int.Parse(t);
                     break;
                 }
-                if (s[i] == ' ' && flag == true&& s[i + 1] == '-')
+                if (s[i] == ' ' && flag == true && s[i + 1] == '-')
                 {
                     ww = s[i + 1].ToString();
-                    qq = s[i + 2].ToString();
-                    tempp = (ww + qq);
-                    y = int.Parse(tempp);
+                    counter = i + 2;
+                    t = "";
+                    while (true)
+                    {
+                        if (Char.IsDigit(s[counter]))
+                        {
+                            t += s[counter];
+                        }
+                        else
+                            break;
+                        counter++;
+                    }
+                    t = ww + t;
+                    y = int.Parse(t.ToString());
                     break;
                 }
             }
@@ -175,11 +222,13 @@ namespace Mars_Rover.Models
                 dir = 0;
             else if (s.Contains("SOUTH"))
                 dir = 270;
-            else
+            else if (s.Contains("WEST"))
                 dir = 180;
+            else
+                ex = true;
         }
 
-        //this function is used to solve the third problem, It takes the start and endpoint with the list of obs
+        //this function is used to solve the third problem, It takes the start and endpoint with the list of obstacles
         public String PathAndCommand(String start,String end,List<KeyValuePair<int, int>> obs)
         {
             this.start = start;
@@ -189,7 +238,7 @@ namespace Mars_Rover.Models
             int tempDir = dir;
             Convert_String(end, ref end_x, ref end_y, ref dir);
             dir = tempDir;
-            //check if the start or the endpoint are obs 
+            //check if the start or the endpoint are obstacles 
             Boolean q = is_OBS(x, y, obs);
             if (q) return "obs";
             q = is_OBS(end_x, end_y, obs);
@@ -198,7 +247,7 @@ namespace Mars_Rover.Models
             //check if the start point is the endpoint
             if (x == end_x && y == end_y) return "";
 
-            //by using the BFS algorithm the path from the start point to the endpoint will be built avoiding all the obs
+            //by using the BFS algorithm the path from the start point to the endpoint will be built avoiding all the obstacles
             Node src = new Node(x, y);
             allNodes.Add(src);
             src.visited = true;
@@ -272,11 +321,11 @@ namespace Mars_Rover.Models
             return c;
         }
 
-        //this function is used to check if the passed coordinates is an obs or not
+        //this function is used to check if the passed coordinates is an obstacle or not
         private Boolean is_OBS(int x, int y, List<KeyValuePair<int, int>> o)
         {
             Boolean obs = false;
-            foreach (KeyValuePair<int, int> kvp in o)//obs
+            foreach (KeyValuePair<int, int> kvp in o)
             {
                 if (kvp.Key == x && kvp.Value == y)
                 {
@@ -287,7 +336,7 @@ namespace Mars_Rover.Models
             return obs;
         }
 
-        //this function is used to build the path from the start to the endpoint by moving on the pred of every point from the endpoint to the start point the reverse it.
+        //this function is used to build the path from the start to the endpoint by moving on the predecessor of every point from the endpoint to the start point the reverse it.
         private List<Node> path(Node dest)
         {
             List<Node> path = new List<Node>();

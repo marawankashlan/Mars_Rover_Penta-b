@@ -102,7 +102,7 @@ namespace Mars_Rover_UnitTest
 
         /// <summary>
         /// Problem 2 test cases
-        /// First test case is a correct commit of commands given to the rover until it faced an obs so it stopped in the step before it.
+        /// First test case is a correct commit of commands given to the rover until it faced an obstacle so it stopped in the step before it.
         /// </summary>
         [TestMethod]
         public void Check_Obstacles_CorrectCommit_FollowCommand()
@@ -128,7 +128,7 @@ namespace Mars_Rover_UnitTest
 
         /// <summary>
         /// Problem 3 test cases
-        /// First one is a correct flow test case where a start and an end with the list of obs added and the rover will move from the start to the end avoiding all obs
+        /// First one is a correct flow test case where a start and an end with the list of obstacles added and the rover will move from the start to the end avoiding all obs
         /// </summary>
         [TestMethod]
         public void PathAndCommand_CorrectFlow_CorrectCommands()
@@ -182,7 +182,7 @@ namespace Mars_Rover_UnitTest
         }
 
         /// <summary>
-        /// third test case where the start point is also an obs
+        /// third test case where the start point is also an obstacle
         /// </summary>
         [TestMethod]
         public void PathAndCommand_StartIsObs_CorrectCommands()
@@ -209,7 +209,7 @@ namespace Mars_Rover_UnitTest
         }
 
         /// <summary>
-        /// fourth test case where the endpoint is also an obs
+        /// fourth test case where the endpoint is also an obstacle
         /// </summary>
         [TestMethod]
         public void PathAndCommand_EndIsObs_CorrectCommands()
