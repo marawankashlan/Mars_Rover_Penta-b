@@ -5,6 +5,7 @@ using System.Web;
 
 namespace Mars_Rover.Models
 {
+    //this class is used as a helper class in the BFS algorithm of the third problem where we save the coordinate of every node, its pred, its adj nodes, amd if it is visited or not.
     public class Node
     {
         public Coordinates coordinate;
@@ -22,6 +23,7 @@ namespace Mars_Rover.Models
             dy = new int[4] { -1, 0, 1, 0 };
 
         }
+        //get the adj nodes of our current node
         public List<Node> getAdj(List<Node> allNodes)
         {
             List<Node> adj = new List<Node>();
@@ -33,6 +35,8 @@ namespace Mars_Rover.Models
             }
             return adj;
         }
+
+        //this function is used to check if one of the adj nodes where called or used before or not if yes then called it again if not build a new node with its coordinates
         private Node checkNode(List<Node> allNodes)
         {
             Boolean contain = false;
@@ -58,6 +62,7 @@ namespace Mars_Rover.Models
         }
     }
 
+    //class used to save the coordinate(x,y) of every node
     public class Coordinates
     {
         public int x;

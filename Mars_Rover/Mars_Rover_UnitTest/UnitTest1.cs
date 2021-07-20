@@ -8,6 +8,10 @@ namespace Mars_Rover_UnitTest
     [TestClass]
     public class UnitTest1
     {
+        /// <summary>
+        /// Problem 1 test cases
+        /// First test case is a correct commit of commands that are given to the function.
+        /// </summary>
         [TestMethod]
         public void MoveRover_CorrectCommit_FollowCommand()
         {
@@ -23,6 +27,9 @@ namespace Mars_Rover_UnitTest
             //Assert
             Assert.AreEqual(expected, output, "Rover didn't follow the commands correctly");
         }
+        /// <summary>
+        /// second test case is another correct commit of commands that are given to the function.
+        /// </summary>
         [TestMethod]
         public void MoveRover_CorrectCommit2_FollowCommand()
         {
@@ -38,6 +45,9 @@ namespace Mars_Rover_UnitTest
             //Assert
             Assert.AreEqual(expected, output, "Rover didn't follow the commands correctly");
         }
+        /// <summary>
+        /// third test case is a correct commit of commands while there are error in entering the commands but the rover follows the correct ones only.
+        /// </summary>
         [TestMethod]
         public void MoveRover_ErrorInCommand_FollowCommand()
         {
@@ -53,6 +63,9 @@ namespace Mars_Rover_UnitTest
             //Assert
             Assert.AreEqual(expected, output, "Rover didn't follow the commands correctly");
         }
+        /// <summary>
+        /// fourth test case is a correct commit of commands while there are error in entering the commands but the rover follows the correct ones only and the start point is a negative coordinate.
+        /// </summary>
         [TestMethod]
         public void MoveRover_ErrorInCommand2_FollowCommand()
         {
@@ -68,6 +81,29 @@ namespace Mars_Rover_UnitTest
             //Assert
             Assert.AreEqual(expected, output, "Rover didn't follow the commands correctly");
         }
+        /// <summary>
+        /// fifth test case is a correct commit of commands given to the function while the start and endpoint are negative coordinates.
+        /// </summary>
+        [TestMethod]
+        public void MoveRover_NegativeCoord_FollowCommand()
+        {
+            //Arrange
+            String commands = "FLFFLBBL";
+            String start = "(-5, -2,WEST)";
+            String expected = "(-8, -4)NORTH";
+            RoverClass rover = new RoverClass(commands, start);
+
+            //Act
+            String output = rover.MoveRover();
+
+            //Assert
+            Assert.AreEqual(expected, output, "Rover didn't follow the commands correctly");
+        }
+
+        /// <summary>
+        /// Problem 2 test cases
+        /// First test case is a correct commit of commands given to the rover until it faced an obs so it stopped in the step before it.
+        /// </summary>
         [TestMethod]
         public void Check_Obstacles_CorrectCommit_FollowCommand()
         {
@@ -88,6 +124,7 @@ namespace Mars_Rover_UnitTest
             //Assert
             Assert.AreEqual(expected, output, "Rover didn't follow the commands correctly");
         }
+
 
         /// <summary>
         /// Problem 3 test cases

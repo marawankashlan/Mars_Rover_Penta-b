@@ -19,6 +19,7 @@ namespace Mars_Rover.Models
         private Queue<Node> queue;
         List<Node> path1;
 
+        //this constructor will be called before the first two problems giving them the start point and the commands to follow.
         public RoverClass(String c,String s)
         {
             direction = new Dictionary<int, string>();
@@ -36,6 +37,8 @@ namespace Mars_Rover.Models
             y = 0;
             dir = 0;
         }
+
+        //this is an override of the constructor that will be called before the third problem as it doesn't need a commands to follow because this problem produce the commands from the start and endpoint.
         public RoverClass()
         {
             direction = new Dictionary<int, string>();
@@ -56,24 +59,32 @@ namespace Mars_Rover.Models
             end_y = 0;
         }
 
+        //this function is for solving the first problem
         public String MoveRover()
         {
+            //take the start string and split it into x,y coordinates and the heading of the rover. 
             Convert_String(start, ref x, ref y, ref dir);
 
+            //for each command in the string of commands SetNewCoord function takes the current position and heading of the rover and apply the command on them.
             foreach (char command in commands) SetNewCoord(ref x,ref y,ref dir, command);
               
             return CoordList[CoordList.Count - 1];
         }
 
+        //override of MoveRover function that will help to produce the commands of the given path in the third problem.
+        //this function takes a command, current x and y, and the heading of the rover.
         private String MoveRover(String commands, ref int x, ref int y, ref int dir)
         {
+            //for each command in the string of commands SetNewCoord function takes the current position and heading of the rover and apply the command on them.
             foreach (char command in commands) SetNewCoord(ref x, ref y, ref dir, command);
 
             return CoordList[CoordList.Count - 1];
         }
 
+        //this function takes the current x,y,heading of the rover with a command then apply this command on the rover heading and position.
         private void SetNewCoord(ref int x,ref int y,ref int dir,char comm)
         {
+            //check on the coming command and rover heading then make the suitable change on the rover position and heading according to this command. 
             if ((comm == 'F' && dir == 0) || (comm == 'B' && dir == 180))
                 x += 1;
            else if ((comm == 'B' && dir == 0) || (comm == 'F' && dir == 180))
@@ -87,24 +98,31 @@ namespace Mars_Rover.Models
             else if (comm == 'R')
                 dir = ((dir - 90) == -90) ? (360 + (dir - 90)) : (dir - 90);
 
+            //save the rover path in Coordlist list.
             CoordList.Add("(" + x + ", " + y + ")" + direction[dir]);
         }
 
+        //this function is used to solve the second problem.
+        //this function calls the first problem functions to make the rover follow the commands and save its position and heading of each command in a list
         public String Check_Obstacles(List<KeyValuePair<int, int>> obs)
         {
             MoveRover();
 
+            //call obs function that will return if the rover path includes an obs or not
             return Obs(x, y, dir, CoordList, obs);
         }
 
+        //this function takes the rover position,heading,list of rover path, and the list of obs.
         private String Obs(int xx,int yy,int dirr, List<String> coordinate, List<KeyValuePair<int, int>> test)
         {
             Boolean check = false;
             int counter = 0;
-            foreach (String coord in coordinate)//string
+
+            //for each coordinate in the rover path check if this coordinate is an obs or not
+            foreach (String coord in coordinate)
             {
                 Convert_String(coord, ref xx, ref yy, ref dirr);
-                foreach (KeyValuePair<int, int> kvp in test)//obs
+                foreach (KeyValuePair<int, int> kvp in test)
                     if (kvp.Key == xx && kvp.Value == yy)
                     {
                         check = true;
@@ -113,13 +131,13 @@ namespace Mars_Rover.Models
                     }
                 if (check) break;
             }
-
+            //if rover path contain an obs then return the step before the obs else return the final coordinate in the rover path.
            return ( check ? (coordinate[counter - 1] + " " + "STOPPED") : (coordinate[coordinate.Count - 1]));
         }
 
+        //this function takes a string and convert it into the rover position(x,y) and heading
         private void Convert_String(String s,ref int x,ref int y,ref int dir)
         {
-            //reading the start point
             flag = false;
             String tempp,qq,ww;
             for (int i = 0; i < s.Length; i++)
@@ -161,22 +179,26 @@ namespace Mars_Rover.Models
                 dir = 180;
         }
 
+        //this function is used to solve the third problem, It takes the start and endpoint with the list of obs
         public String PathAndCommand(String start,String end,List<KeyValuePair<int, int>> obs)
         {
             this.start = start;
             this.end = end;
-
+            //convert the start and endpoint to coordinate and heading 
             Convert_String(start, ref x, ref y, ref dir);
             int tempDir = dir;
             Convert_String(end, ref end_x, ref end_y, ref dir);
             dir = tempDir;
+            //check if the start or the endpoint are obs 
             Boolean q = is_OBS(x, y, obs);
             if (q) return "obs";
             q = is_OBS(end_x, end_y, obs);
             if (q) return "obs";
 
+            //check if the start point is the endpoint
             if (x == end_x && y == end_y) return "";
 
+            //by using the BFS algorithm the path from the start point to the endpoint will be built avoiding all the obs
             Node src = new Node(x, y);
             allNodes.Add(src);
             src.visited = true;
@@ -212,15 +234,20 @@ namespace Mars_Rover.Models
                 }
                 if (found) break;
             }
+            //after building the path from the start to the endpoint getComm function is called to get the commands used to move the rover in this path
             return getComm(dir, path1);
         }
 
+        //this function is used to get the commands used to move from the start point to the endpoint.
         private String getComm(int dir, List<Node> path)
         {
             String command = "", c = "";
             int tempx, tempy, tempDir;
+            //string array containg every possible command
             String[] str = { "F", "B", "LB", "LF", "RB", "RF" };
 
+            //moving on the path from start to end get the coordinate then apply a command on it then check if the output of this command equals to the next coordinate or not
+            //if it matches the next coordinate then add this command to the string if not try another command
             for (int i = 0; i < path.Count - 1; i++)
             {
                 for (int j = 0; j < str.Length; j++)
@@ -241,9 +268,11 @@ namespace Mars_Rover.Models
                 }
 
             }
+            //after getting the correct commands to produce the path return it.
             return c;
         }
 
+        //this function is used to check if the passed coordinates is an obs or not
         private Boolean is_OBS(int x, int y, List<KeyValuePair<int, int>> o)
         {
             Boolean obs = false;
@@ -258,6 +287,7 @@ namespace Mars_Rover.Models
             return obs;
         }
 
+        //this function is used to build the path from the start to the endpoint by moving on the pred of every point from the endpoint to the start point the reverse it.
         private List<Node> path(Node dest)
         {
             List<Node> path = new List<Node>();
