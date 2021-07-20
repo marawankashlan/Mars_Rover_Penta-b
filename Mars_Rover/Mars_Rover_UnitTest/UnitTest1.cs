@@ -100,6 +100,66 @@ namespace Mars_Rover_UnitTest
             Assert.AreEqual(expected, output, "Rover didn't follow the commands correctly");
         }
 
+        [TestMethod]
+        public void MoveRover_IncorrectInput1_FollowCommand()
+        {
+            //Arrange
+            String commands = "FFFRBBLFFBLR";
+            String start = "(100,-11,WEST)";
+            String expected = "Incorrect input format";
+            RoverClass rover = new RoverClass(commands, start);
+
+            //Act
+            String output = rover.MoveRover();
+
+            //Assert
+            Assert.AreEqual(expected, output, "Rover didn't follow the commands correctly");
+        }
+        [TestMethod]
+        public void MoveRover_IncorrectInput2_FollowCommand()
+        {
+            //Arrange
+            String commands = "BBRFFLFBL";
+            String start = "2, 7,NORTH)";
+            String expected = "Incorrect input format";
+            RoverClass rover = new RoverClass(commands, start);
+
+            //Act
+            String output = rover.MoveRover();
+
+            //Assert
+            Assert.AreEqual(expected, output, "Rover didn't follow the commands correctly");
+        }
+        [TestMethod]
+        public void MoveRover_IncorrectInput3_FollowCommand()
+        {
+            //Arrange
+            String commands = "RBRFLBFLF";
+            String start = "(5 4,EAST)";
+            String expected = "Incorrect input format";
+            RoverClass rover = new RoverClass(commands, start);
+
+            //Act
+            String output = rover.MoveRover();
+
+            //Assert
+            Assert.AreEqual(expected, output, "Rover didn't follow the commands correctly");
+        }
+        [TestMethod]
+        public void MoveRover_IncorrectInput4_FollowCommand()
+        {
+            //Arrange
+            String commands = "LFFRFFLBBRB";
+            String start = "(-2, -7 SOUTH)";
+            String expected = "Incorrect input format";
+            RoverClass rover = new RoverClass(commands, start);
+
+            //Act
+            String output = rover.MoveRover();
+
+            //Assert
+            Assert.AreEqual(expected, output, "Rover didn't follow the commands correctly");
+        }
         /// <summary>
         /// Problem 2 test cases
         /// First test case is a correct commit of commands given to the rover until it faced an obstacle so it stopped in the step before it.
