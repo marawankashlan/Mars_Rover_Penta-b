@@ -100,6 +100,9 @@ namespace Mars_Rover_UnitTest
             Assert.AreEqual(expected, output, "Rover didn't follow the commands correctly");
         }
 
+        /// <summary>
+        ///  sixth test case is an example of incorrect input where the space before the y is missing.
+        /// </summary>
         [TestMethod]
         public void MoveRover_IncorrectInput1_FollowCommand()
         {
@@ -115,6 +118,10 @@ namespace Mars_Rover_UnitTest
             //Assert
             Assert.AreEqual(expected, output, "Rover didn't follow the commands correctly");
         }
+
+        /// <summary>
+        ///  seventh test case is an example of incorrect input where the first ( is missing.
+        /// </summary>
         [TestMethod]
         public void MoveRover_IncorrectInput2_FollowCommand()
         {
@@ -130,6 +137,10 @@ namespace Mars_Rover_UnitTest
             //Assert
             Assert.AreEqual(expected, output, "Rover didn't follow the commands correctly");
         }
+
+        /// <summary>
+        ///  eighth test case is an example of incorrect input where the , between x and y is missing.
+        /// </summary>
         [TestMethod]
         public void MoveRover_IncorrectInput3_FollowCommand()
         {
@@ -145,6 +156,10 @@ namespace Mars_Rover_UnitTest
             //Assert
             Assert.AreEqual(expected, output, "Rover didn't follow the commands correctly");
         }
+
+        /// <summary>
+        ///  ninth test case is an example of incorrect input where the , between y and the heading is missing.
+        /// </summary>
         [TestMethod]
         public void MoveRover_IncorrectInput4_FollowCommand()
         {
@@ -166,7 +181,7 @@ namespace Mars_Rover_UnitTest
         /// First test case is a correct commit of commands given to the rover until it faced an obstacle so it stopped in the step before it.
         /// </summary>
         [TestMethod]
-        public void Check_Obstacles_CorrectCommit_FollowCommand()
+        public void CheckObstacles_CorrectCommit_FollowCommand()
         {
             //Arrange
             List<KeyValuePair<int, int>> obs = new List<KeyValuePair<int, int>>();
@@ -185,8 +200,12 @@ namespace Mars_Rover_UnitTest
             //Assert
             Assert.AreEqual(expected, output, "Rover didn't follow the commands correctly");
         }
+
+        /// <summary>
+        ///  Second test case is a correct commit of commands given to the rover until it faced an obstacle so it stopped in the step before it.
+        /// </summary>
         [TestMethod]
-        public void Check_Obstacles_CorrectCommit2_FollowCommand()
+        public void CheckObstacles_CorrectCommit2_FollowCommand()
         {
             //Arrange
             List<KeyValuePair<int, int>> obs = new List<KeyValuePair<int, int>>();
@@ -206,8 +225,12 @@ namespace Mars_Rover_UnitTest
             //Assert
             Assert.AreEqual(expected, output, "Rover didn't follow the commands correctly");
         }
+
+        /// <summary>
+        ///  Third test case is a correct commit of commands given to the rover until it faced an obstacle so it stopped in the step before it.
+        /// </summary>
         [TestMethod]
-        public void Check_Obstacles_CorrectCommit3_FollowCommand()
+        public void CheckObstacles_CorrectCommit3_FollowCommand()
         {
             //Arrange
             List<KeyValuePair<int, int>> obs = new List<KeyValuePair<int, int>>();
@@ -227,6 +250,10 @@ namespace Mars_Rover_UnitTest
             //Assert
             Assert.AreEqual(expected, output, "Rover didn't follow the commands correctly");
         }
+
+        /// <summary>
+        ///  Fourth test case is a correct commit of commands given to the rover until it faced an obstacle so it stopped in the step before it.
+        /// </summary>
         [TestMethod]
         public void Check_Obstacles_CorrectCommit4_FollowCommand()
         {
@@ -234,7 +261,7 @@ namespace Mars_Rover_UnitTest
             List<KeyValuePair<int, int>> obs = new List<KeyValuePair<int, int>>();
 
             String commands = "BRBATRFFLF";
-            String start = "(11, 9,NOTRH)";
+            String start = "(11, 9,NORTH)";
             String expected = "(11, 6)EAST";
             RoverClass rover = new RoverClass(commands, start);
             obs.Add(new KeyValuePair<int, int>(11, 3));
@@ -356,6 +383,9 @@ namespace Mars_Rover_UnitTest
             Assert.AreEqual(expected, output, "Rover didn't reach the endpoint safely");
         }
 
+        /// <summary>
+        /// fifth test case where rover find its path from the start to the end avoiding all obstacles
+        /// </summary>
         [TestMethod]
         public void PathAndCommand_CorrectFlow2_CorrectCommands()
         {
@@ -382,6 +412,9 @@ namespace Mars_Rover_UnitTest
             Assert.AreEqual(expected, output, "Rover didn't reach the endpoint safely");
         }
 
+        /// <summary>
+        /// sixth test case where rover find its path from the start to the end avoiding all obstacles
+        /// </summary>
         [TestMethod]
         public void PathAndCommand_CorrectFlow3_CorrectCommands()
         {
