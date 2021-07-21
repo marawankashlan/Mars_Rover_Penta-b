@@ -301,7 +301,7 @@ namespace Mars_Rover_UnitTest
             //Assert
             Assert.AreEqual(expected, output, "Rover didn't reach the endpoint safely");
         }
-
+        
         /// <summary>
         /// third test case where the start point is also an obstacle
         /// </summary>
@@ -355,5 +355,63 @@ namespace Mars_Rover_UnitTest
             //Assert
             Assert.AreEqual(expected, output, "Rover didn't reach the endpoint safely");
         }
+
+        [TestMethod]
+        public void PathAndCommand_CorrectFlow2_CorrectCommands()
+        {
+            //Arrange
+            List<KeyValuePair<int, int>> obs = new List<KeyValuePair<int, int>>();
+            String end = "(5, 2)";
+            String start = "(-3, 7, SOUTH)";
+            String expected = "LFLBLBBBLFLFFLBLBLFLFLB";
+            RoverClass rover = new RoverClass();
+            obs.Add(new KeyValuePair<int, int>(-2, 5));
+            obs.Add(new KeyValuePair<int, int>(-3, 6));
+            obs.Add(new KeyValuePair<int, int>(-1, 1));
+            obs.Add(new KeyValuePair<int, int>(0, 5));
+            obs.Add(new KeyValuePair<int, int>(1, 3));
+            obs.Add(new KeyValuePair<int, int>(2, 4));
+            obs.Add(new KeyValuePair<int, int>(3, 3));
+            obs.Add(new KeyValuePair<int, int>(4, 2));
+            obs.Add(new KeyValuePair<int, int>(5, 1));
+
+            //Act
+            String output = rover.PathAndCommand(start, end, obs);
+
+            //Assert
+            Assert.AreEqual(expected, output, "Rover didn't reach the endpoint safely");
+        }
+
+        [TestMethod]
+        public void PathAndCommand_CorrectFlow3_CorrectCommands()
+        {
+            //Arrange
+            List<KeyValuePair<int, int>> obs = new List<KeyValuePair<int, int>>();
+            String end = "(-9, 5)";
+            String start = "(4, -1, WEST)";
+            String expected = "FFFFLBLBLFLFLBBBBBLBBLBLFFFFF";
+            RoverClass rover = new RoverClass();
+            obs.Add(new KeyValuePair<int, int>(4, 1));
+            obs.Add(new KeyValuePair<int, int>(3, 3));
+            obs.Add(new KeyValuePair<int, int>(2, 5));
+            obs.Add(new KeyValuePair<int, int>(1, 4));
+            obs.Add(new KeyValuePair<int, int>(0, 2));
+            obs.Add(new KeyValuePair<int, int>(-1, -1));
+            obs.Add(new KeyValuePair<int, int>(-2, 0));
+            obs.Add(new KeyValuePair<int, int>(-3, 5));
+            obs.Add(new KeyValuePair<int, int>(-4, 4));
+            obs.Add(new KeyValuePair<int, int>(-5, 3));
+            obs.Add(new KeyValuePair<int, int>(-6, 2));
+            obs.Add(new KeyValuePair<int, int>(-7, 1));
+            obs.Add(new KeyValuePair<int, int>(-8, 0));
+            obs.Add(new KeyValuePair<int, int>(-9, 4));
+            //Act
+            String output = rover.PathAndCommand(start, end, obs);
+
+            //Assert
+            Assert.AreEqual(expected, output, "Rover didn't reach the endpoint safely");
+        }
     }
 }
+
+
