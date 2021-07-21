@@ -286,7 +286,7 @@ namespace Mars_Rover_UnitTest
             String end = "(6, 7)";
             String start = "(4, 2, EAST)";
             String expected = "BLFFFFLBBBLB";
-            RoverClass rover = new RoverClass();
+             RoverClass rover = new RoverClass();
             obs.Add(new KeyValuePair<int, int>(1, 3));
             obs.Add(new KeyValuePair<int, int>(5, 2));
             obs.Add(new KeyValuePair<int, int>(6, 5));
