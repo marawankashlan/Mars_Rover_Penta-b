@@ -1,6 +1,6 @@
 # Mars_Rover_Penta-b
  
-This is the solution of Mars Rover assessment of penta-b. This assessment is an API.
+This is the solution of Mars Rover assessment of penta-b.
 
 To run the project from visual studio go to controls file then choose the RoverClassControl file from it, then press on run the project.
 
